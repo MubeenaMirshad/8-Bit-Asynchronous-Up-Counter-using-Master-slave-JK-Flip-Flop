@@ -1,4 +1,4 @@
-# 8-Bit Asynchronous Up Counter Using Master–Slave JK Flip-Flops
+# 8-Bit Asynchronous Up Counter Using Master–Slave JK Flip-Flops in Cadence Virtuoso
 
 **Author:** Mubeena Mirshad  
 **Design and simulation environment:** Cadence Virtuoso  
