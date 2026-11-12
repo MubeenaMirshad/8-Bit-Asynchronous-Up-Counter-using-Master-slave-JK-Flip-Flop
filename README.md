@@ -104,13 +104,7 @@ The supply voltage, clock period, transient stop time, device models, and other 
     └── README.md
 ```
 
-## Limitations and future improvements
 
-- Include the native Cadence Virtuoso schematic and simulation files when they become available.
-- Document the exact clock period, supply voltage, and transient-analysis settings.
-- Add a verified output-state table for the eight counter bits.
-- Measure and discuss propagation delay through the ripple stages.
-- Compare the asynchronous architecture with a synchronous counter.
 
 ## Author
 
