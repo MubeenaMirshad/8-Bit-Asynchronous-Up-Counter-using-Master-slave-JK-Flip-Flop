@@ -186,8 +186,4 @@ The waveforms demonstrate frequency division by $2^n$ at each successive output 
 
 **Mubeena Mirshad**
 
-Electronics and Communication Engineering  
 Digital IC Design | Full-Custom VLSI Design
-
-**Design Tool:** Cadence Virtuoso  
-**Technology:** GPDK 90nm
