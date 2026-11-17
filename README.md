@@ -104,7 +104,7 @@ Gate-level schematic and full-custom physical layout integrating the Master and 
 
 ---
 
-### 4. Top-Level 8-Bit Asynchronous Up Counter
+### 4. 8-Bit Asynchronous Up Counter
 
 Full-chip implementation of the 8-bit asynchronous up counter, consisting of eight cascaded Master-Slave JK Flip-Flop blocks arranged in a compact $2 \times 4$ array with inter-stage ripple clock routing.
 
