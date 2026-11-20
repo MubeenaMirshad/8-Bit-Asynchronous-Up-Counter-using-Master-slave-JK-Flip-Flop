@@ -2,8 +2,7 @@
 
 **Author:** Mubeena Mirshad  
 **Design and Simulation Environment:** Cadence Virtuoso  
-**Project Area:** Digital IC Design / Sequential Logic
-
+**Project Area:** Digital IC Design / Sequential Logic    
 **Project Guide:** Dr. P Ranga Babu
 
 ![Cadence Virtuoso](https://img.shields.io/badge/EDA%20Tool-Cadence%20Virtuoso-blue.svg)
