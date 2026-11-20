@@ -181,6 +181,13 @@ The waveforms demonstrate frequency division by $2^n$ at each successive output 
 4. Cascade eight instances of the Master-Slave JK Flip-Flop symbol to form the **8-Bit Asynchronous Up Counter**.
 5. Open **ADE L**, select the **Spectre** simulator, set the transient stop time to $4.2\text{ }\mu s$, and plot `/clk` along with `/Q0`–`/Q7`.
 
+
+## Conclusion
+
+This project demonstrates the complete design and implementation of an **8-bit asynchronous up counter** using NAND-based Master-Slave JK Flip-Flops in Cadence Virtuoso. The design covers transistor-level schematic development, CMOS physical layout implementation, and transient simulation using the GPDK 90nm technology. The simulation results verify the expected MOD-256 counting sequence and frequency division across all eight stages.
+
+The project provided practical experience in **CMOS circuit design, sequential logic, full-custom VLSI design, and circuit simulation**, strengthening the understanding of digital IC design concepts and their implementation.
+
 ---
 
 ## Author
