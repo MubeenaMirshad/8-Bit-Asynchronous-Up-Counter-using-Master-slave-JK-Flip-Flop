@@ -261,12 +261,6 @@ The timing characteristics of the Master-Slave JK Flip-Flops determine the corre
 | Clock Skew | `tskew` | Not characterized | Conventional synchronous clock skew is not applicable to the ripple chain |
 | Ripple Propagation Delay | `tripple` | 1.60 ns (Estimated) | Approximate cumulative delay across eight stages |
 
-**Timing Consideration:**
-
-The asynchronous counter does not use a common clock edge to trigger all eight flip-flops. Instead, the output of one stage triggers the next stage. Therefore, the cumulative propagation delay determines the time required for the complete counter output to settle after a clock transition.
-
-The setup time, hold time and maximum operating frequency require separate flip-flop characterization and cannot be reliably inferred from the available screenshots.
-
 ## Repository Structure
 
 ```text
