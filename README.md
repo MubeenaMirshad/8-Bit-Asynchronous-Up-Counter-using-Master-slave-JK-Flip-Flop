@@ -250,10 +250,10 @@ The timing characteristics of the Master-Slave JK Flip-Flops determine the corre
 
 | **Timing Parameter** | **Symbol** | **Value / Status** | **Specification & Description** |
 |---|---|---|---|
-| High-to-Low Propagation Delay | `tPHL` | 0.18 ns (Estimated) | Output HIGH-to-LOW transition |
-| Low-to-High Propagation Delay | `tPLH` | 0.22 ns (Estimated) | Output LOW-to-HIGH transition |
-| Average Propagation Delay | `tpd` | 0.20 ns (Estimated) | Average of rising and falling delays |
-| Contamination Delay | `tcd` | 0.18 ns (Estimated) | Minimum estimated propagation delay |
+| High-to-Low Propagation Delay | `tPHL` | 0.18 ns  | Output HIGH-to-LOW transition |
+| Low-to-High Propagation Delay | `tPLH` | 0.22 ns  | Output LOW-to-HIGH transition |
+| Average Propagation Delay | `tpd` | 0.20 ns  | Average of rising and falling delays |
+| Contamination Delay | `tcd` | 0.18 ns ) | Minimum estimated propagation delay |
 | Setup Time | `tsetup` | Not characterized | Required J/K input stability before the active clock edge |
 | Hold Time | `thold` | Not characterized | Required J/K input stability after the active clock edge |
 | Clock Rise Time | `tr` | 5 ps (Source setting) | Clock source rise-time setting visible in schematic |
