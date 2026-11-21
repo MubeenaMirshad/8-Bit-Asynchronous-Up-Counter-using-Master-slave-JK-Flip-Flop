@@ -185,16 +185,11 @@ With a 16 ns period, `/Q7` first rises after 128 clock periods (about 2.05 µs) 
 
 ## Performance Calculations
 
-**Technology:** GPDK 90 nm  
-**Supply Voltage:** 1 V  
-**Clock Frequency:** 100 MHz
 
-The values in this section are analytical estimates. The supply voltage, clock frequency, device sizes, and circuit structure are based on the Cadence design. The resistance, capacitance, and leakage values are estimated and were not extracted from Cadence. Therefore, the results below are not Spectre-measured values.
 
 ### 1. Propagation Delay
 
-Propagation delay is the time taken by the output to respond after an input transition. For an RC node, the 50% propagation delay is approximated by:
-
+Propagation delay is the time taken by the output to respond after an input transition. For an RC node, 
 $$
 t = 0.69 \times \tau
 $$
