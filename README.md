@@ -204,35 +204,54 @@ The clock period must be longer than t<sub>ripple</sub> so that all outputs sett
 
 While the ripple travels, the outputs briefly show intermediate codes. For example, `01111111` to `10000000` passes through `01111110`, `01111100`, and so on. Any logic that decodes the counter outputs must be glitch-safe or wait for t<sub>ripple</sub>.
 
-### Power, PDP and EDP
 
-**Dynamic power.** This is a first-order estimate that counts only the eight Q output nodes, each with 10 fF of load. Output Q(n) toggles at f/2<sup>n+1</sup>, so the switching activity falls by half at every stage:
+### 7.3 Power, PDP, and EDP Analysis
 
-P<sub>dynamic</sub> = C · V<sub>DD</sub>² · f · Σ<sub>n=0</sub><sup>7</sup> 2<sup>-(n+1)</sup>
+- **Total Average Power Dissipation (`Pavg`):** **`0.633 µW`** (`6.33 × 10⁻⁷ W`)
+- **Dynamic Power Dissipation (`Pdynamic`):** **`0.6226 µW`** (`6.226 × 10⁻⁷ W`, `≈98.4%` of total)
 
-= (10 × 10⁻¹⁵ F)(1.0 V)²(62.5 × 10⁶ Hz)(1 − 2⁻⁸)
+  `Pdynamic = C × VDD² × f × Σ[2⁻⁽ⁿ⁺¹⁾]`
 
-= 0.6226 µW
+  `= (10 × 10⁻¹⁵ F) × (1.0 V)² × (62.5 × 10⁶ Hz) × (255/256)`
 
-Internal flip-flop nodes also switch, so the power measured in Spectre will be higher.
+  `≈ 0.6226 µW`
 
-**Static power.** With an assumed total leakage current of 10 nA:
+- **Static Leakage Power (`Pstatic`):** **`0.01 µW`** (`1.0 × 10⁻⁸ W`, `≈1.6%` of total)
 
-P<sub>static</sub> = I<sub>leakage</sub> × V<sub>DD</sub> = (10 × 10⁻⁹ A)(1.0 V) = 0.01 µW
+  `Pstatic = Ileakage × VDD`
 
-**Average power.**
+  `= (10 × 10⁻⁹ A) × (1.0 V) = 0.01 µW`
 
-P<sub>avg</sub> = P<sub>dynamic</sub> + P<sub>static</sub> = 0.6226 µW + 0.01 µW ≈ **0.633 µW**
+- **Average Propagation Delay (`tpd`):** **`3.24 ns`** (`3.24 × 10⁻⁹ s`)
 
-Dynamic power is about 98.4% of the total and static power about 1.6%.
+#### 1. Power-Delay Product (PDP):
 
-**Power-delay product.** This is the energy consumed over the worst-case ripple interval:
+```math
+PDP = Pavg × tpd
+```
 
-PDP = P<sub>avg</sub> × t<sub>ripple</sub> = (0.633 × 10⁻⁶ W)(3.24 × 10⁻⁹ s) = **2.05 × 10⁻¹⁵ J = 2.05 fJ**
+```math
+PDP = (0.633 × 10^{-6} W) × (3.24 × 10^{-9} s)
+```
 
-**Energy-delay product.**
+```math
+PDP = 2.05 × 10^{-15} J = 2.05 fJ
+```
 
-EDP = PDP × t<sub>ripple</sub> = (2.05 × 10⁻¹⁵ J)(3.24 × 10⁻⁹ s) = **6.64 × 10⁻²⁴ J·s** (equivalently 6.64 fJ·ns)
+#### 2. Energy-Delay Product (EDP):
+
+```math
+EDP = PDP × tpd
+```
+
+```math
+EDP = (2.05 × 10^{-15} J) × (3.24 × 10^{-9} s)
+```
+
+```math
+EDP = 6.64 × 10^{-24} J⋅s = 6.64 fJ⋅ns
+```
+
 
 ---
 
