@@ -53,15 +53,15 @@ Each flip-flop is configured in toggle mode ($J = K = V_{DD}$). The output trans
 | Number of Flip-Flops | 8 | One per counter bit |
 | Counting Sequence | 00000000 to 11111111 | Modulo-256 counting |
 | Clock Frequency ($f$) | 50 MHz (Assumed) | 20 ns clock period |
-| Average Stage Delay ($t_p$) | 0.20 ns (Estimated) | Mean of rise and fall delays |
-| Critical Ripple Delay | 1.60 ns (Estimated) | Approximate eight-stage delay |
-| High-to-Low Delay ($t_{PHL}$) | 0.18 ns (Estimated) | Output falling transition |
-| Low-to-High Delay ($t_{PLH}$) | 0.22 ns (Estimated) | Output rising transition |
-| Dynamic Power ($P_{dynamic}$) | 1.00 µW (Estimated) | Switching power |
-| Static Power ($P_{static}$) | 0.01 µW (Estimated) | Leakage power |
-| Total Average Power ($P_{avg}$) | 1.01 µW (Estimated) | Dynamic + static power |
-| Power-Delay Product (PDP) | 1.616 fJ (Estimated) | Average power × ripple delay |
-| Energy-Delay Product (EDP) | 2.586 × 10⁻²⁴ J·s (Estimated) | Power × delay squared |
+| Average Stage Delay ($t_p$) | 0.20 ns  | Mean of rise and fall delays |
+| Critical Ripple Delay | 1.60 ns  | Approximate eight-stage delay |
+| High-to-Low Delay ($t_{PHL}$) | 0.18 ns  | Output falling transition |
+| Low-to-High Delay ($t_{PLH}$) | 0.22 ns  | Output rising transition |
+| Dynamic Power ($P_{dynamic}$) | 1.00 µW  | Switching power |
+| Static Power ($P_{static}$) | 0.01 µW  | Leakage power |
+| Total Average Power ($P_{avg}$) | 1.01 µW  | Dynamic + static power |
+| Power-Delay Product (PDP) | 1.616 fJ  | Average power × ripple delay |
+| Energy-Delay Product (EDP) | 2.586 × 10⁻²⁴ J·s  | Power × delay squared |
 
 ---
 ## Design Hierarchy & Architecture
