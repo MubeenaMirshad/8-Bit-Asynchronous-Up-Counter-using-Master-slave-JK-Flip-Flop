@@ -183,28 +183,34 @@ All timing parameters are referenced to the 50% supply threshold (`Vmid = 0.5 V`
 | **JK Flip Flop Counter Stage** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | Clock-to-output transition |
 | **8-Bit Asynchronous Counter** | 1.76 ns | 1.44 ns | 1.60 ns | 0.18 ns* | — | — | — | Eight-stage ripple propagation during counter rollover |
 ---
+### 7.3 Power Dissipation, PDP and EDP
 
-### 7.3 Power, PDP, and EDP Analysis (8-Bit Asynchronous Counter)
+- **Total Average Power Dissipation (Pavg):** **1.01 µW** (1.01 × 10⁻⁶ W)
 
-- **Total Average Power Dissipation (`Pavg`):** **`1.01 µW`** (`1.01 × 10⁻⁶ W`)
-- **Dynamic Power Dissipation (`Pdynamic`):** **`1.00 µW`** (approximately 99.0% of total)
+- **Dynamic Power Dissipation (Pdynamic):** **1.00 µW** (approximately 99.0% of total power)
 
-  `Pdynamic = α × Ceff × VDD² × f`
+  Dynamic power is calculated as:
 
-  `= 2 × (10 × 10⁻¹⁵ F) × (1 V)² × (50 × 10⁶ Hz)`
+  $$P_{dynamic} = \alpha \times C_{eff} \times V_{DD}^{2} \times f$$
 
-  `= 1.00 µW`
+  $$= 2 \times (10 \times 10^{-15}) \times (1)^2 \times (50 \times 10^6)$$
 
-- **Static Leakage Power (`Pstatic`):** **`0.01 µW`** (approximately 1.0% of total)
+  $$= 1.00\ \mu W$$
 
-  `Pstatic = Ileakage × VDD`
+- **Static Leakage Power (Pstatic):** **0.01 µW** (approximately 1.0% of total power)
 
-  `= 10 nA × 1 V`
+  Static power is calculated as:
 
-  `= 0.01 µW`
+  $$P_{static} = I_{leakage} \times V_{DD}$$
 
-- **Average Propagation Delay (`tpd`):** **`0.20 ns`**
-- **Estimated Critical Ripple Delay:** **`1.60 ns`** (eight cascaded stages)
+  $$= 10\ nA \times 1\ V$$
+
+  $$= 0.01\ \mu W$$
+
+- **Average Propagation Delay (tpd):** **0.20 ns**
+
+- **Critical Ripple Delay:** **1.60 ns** (eight cascaded stages)
+
 
 #### 1. Power-Delay Product (PDP)
 
