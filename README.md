@@ -180,11 +180,92 @@ All timing parameters are referenced to the 50% supply threshold (`Vmid = 0.5 V`
 | **2-Input NAND Gate** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | NAND pull-up / pull-down transition |
 | **3-Input NAND Gate** | 0.24 ns | 0.20 ns | 0.22 ns | 0.20 ns | 22 kΩ | 10 fF | 0.22 ns | Three-transistor series pull-down path |
 | **Master-Slave JK Flip-Flop** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | Master-to-slave data transfer |
-| **Single Counter Stage** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | Clock-to-output transition |
+| **JK Flip Flop Counter Stage** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | Clock-to-output transition |
 | **8-Bit Asynchronous Counter** | 1.76 ns | 1.44 ns | 1.60 ns | 0.18 ns* | — | — | — | Eight-stage ripple propagation during counter rollover |
+---
 
+### 7.3 Power, PDP, and EDP Analysis (8-Bit Asynchronous Counter)
+
+- **Total Average Power Dissipation (`Pavg`):** **`1.01 µW`** (`1.01 × 10⁻⁶ W`)
+- **Dynamic Power Dissipation (`Pdynamic`):** **`1.00 µW`** (approximately 99.0% of total)
+
+  `Pdynamic = α × Ceff × VDD² × f`
+
+  `= 2 × (10 × 10⁻¹⁵ F) × (1 V)² × (50 × 10⁶ Hz)`
+
+  `= 1.00 µW`
+
+- **Static Leakage Power (`Pstatic`):** **`0.01 µW`** (approximately 1.0% of total)
+
+  `Pstatic = Ileakage × VDD`
+
+  `= 10 nA × 1 V`
+
+  `= 0.01 µW`
+
+- **Average Propagation Delay (`tpd`):** **`0.20 ns`**
+- **Estimated Critical Ripple Delay:** **`1.60 ns`** (eight cascaded stages)
+
+#### 1. Power-Delay Product (PDP)
+
+PDP represents the energy consumed during the estimated critical-path propagation interval.
+
+$$
+PDP=P_{avg}\times t_{ripple}
+$$
+
+$$
+=(1.01\times10^{-6})(1.60\times10^{-9})
+$$
+
+$$
+\boxed{PDP=1.616\times10^{-15}\ J=1.616\ fJ}
+$$
+
+#### 2. Energy-Delay Product (EDP)
+
+EDP represents the combined energy and delay performance.
+
+$$
+EDP=PDP\times t_{ripple}
+$$
+
+$$
+=(1.616\times10^{-15})(1.60\times10^{-9})
+$$
+
+$$
+\boxed{EDP=2.586\times10^{-24}\ J\cdot s}
+$$
+
+Equivalent:
+
+`EDP = 2.586 fJ·ns`
 
 ---
+
+### 7.4 Flip-Flop Timing Characteristics and Clock Parameters
+
+The timing characteristics of the Master-Slave JK Flip-Flops determine the correct operation of the asynchronous counter. Since each flip-flop stage is triggered by the output transition of the preceding stage, the overall counting speed is limited by cumulative ripple propagation delay.
+
+| **Timing Parameter** | **Symbol** | **Value / Status** | **Specification & Description** |
+|---|---|---|---|
+| High-to-Low Propagation Delay | `tPHL` | 0.18 ns (Estimated) | Output HIGH-to-LOW transition |
+| Low-to-High Propagation Delay | `tPLH` | 0.22 ns (Estimated) | Output LOW-to-HIGH transition |
+| Average Propagation Delay | `tpd` | 0.20 ns (Estimated) | Average of rising and falling delays |
+| Contamination Delay | `tcd` | 0.18 ns (Estimated) | Minimum estimated propagation delay |
+| Setup Time | `tsetup` | Not characterized | Required J/K input stability before the active clock edge |
+| Hold Time | `thold` | Not characterized | Required J/K input stability after the active clock edge |
+| Clock Rise Time | `tr` | 5 ps (Source setting) | Clock source rise-time setting visible in schematic |
+| Clock Fall Time | `tf` | Not verified | Requires clock source configuration |
+| Clock Skew | `tskew` | Not characterized | Conventional synchronous clock skew is not applicable to the ripple chain |
+| Ripple Propagation Delay | `tripple` | 1.60 ns (Estimated) | Approximate cumulative delay across eight stages |
+
+**Timing Consideration:**
+
+The asynchronous counter does not use a common clock edge to trigger all eight flip-flops. Instead, the output of one stage triggers the next stage. Therefore, the cumulative propagation delay determines the time required for the complete counter output to settle after a clock transition.
+
+The setup time, hold time and maximum operating frequency require separate flip-flop characterization and cannot be reliably inferred from the available screenshots.
 
 ## Repository Structure
 
