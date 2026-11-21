@@ -4,20 +4,6 @@ Technology: GPDK 90 nm, supply voltage 1 V, clock frequency 100 MHz.
 
 The values in this section are analytical estimates. The supply voltage, clock frequency, device sizes and circuit structure come from the Cadence design. The resistance, capacitance and leakage values are estimated and were not extracted from Cadence, so the results below are not Spectre-measured values.
 
-### Calculation Inputs
-
-| Quantity | Value | Source |
-|:---|:---:|:---|
-| Supply voltage, V<sub>DD</sub> | 1 V | Cadence schematic |
-| Clock frequency | 100 MHz (10 ns period) | Cadence testbench |
-| Device size | W = 120 nm, L = 100 nm | Cadence schematic |
-| Number of stages | 8 | Cadence schematic |
-| NMOS on-resistance, R<sub>n</sub> | 10 kΩ | Estimated |
-| PMOS on-resistance, R<sub>p</sub> | 25 kΩ | Estimated |
-| Load capacitance at each gate output, C<sub>L</sub> | 10 fF | Estimated |
-| Internal node capacitance between series NMOS, C<sub>x</sub> | 2 fF | Estimated |
-| Leakage current of the whole counter | 10 nA | Estimated |
-| Delay reference level | 50% of V<sub>DD</sub> (0.5 V) | Convention |
 
 ### 1. Propagation Delay
 
