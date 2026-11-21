@@ -132,4 +132,3 @@ EDP = PDP × t<sub>ripple</sub> = (3.88 × 10⁻¹⁵ J)(3.84 × 10⁻⁹ s) = 1
 | PDP | 3.88 fJ |
 | EDP | 1.49 × 10⁻²³ J·s |
 
-All values in this table are analytical estimates. The transient waveforms above are the simulation results.
