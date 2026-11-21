@@ -1,104 +1,141 @@
+
 # 8-Bit Asynchronous Up Counter using Master-Slave JK Flip-Flops
 
 **Author:** Mubeena Mirshad  
 **Design and Simulation Environment:** Cadence Virtuoso  
-**Project Area:** Digital IC Design / Sequential Logic    
+**Project Area:** Digital IC Design / Sequential Logic  
 **Project Guide:** Dr. P Ranga Babu
 
 ![Cadence Virtuoso](https://img.shields.io/badge/EDA%20Tool-Cadence%20Virtuoso-blue.svg)
 ![Technology](https://img.shields.io/badge/Technology-GPDK%2090nm-green.svg)
 ![Design Flow](https://img.shields.io/badge/Flow-Full%20Custom%20IC%20Design-orange.svg)
 
-A full-custom CMOS transistor-level and physical layout implementation of an **8-Bit Asynchronous (Ripple) Up Counter** designed using NAND-based **Master-Slave JK Flip-Flops** in **Cadence Virtuoso** (`gpdk090` 90nm process technology).
+This project presents the design and implementation of an **8-bit asynchronous (ripple) up counter** using NAND-based Master-Slave JK flip-flops. The design includes transistor-level schematic development, CMOS physical layout implementation, and transient simulation using Cadence Virtuoso with the GPDK 90nm technology.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Design Hierarchy & Architecture](#design-hierarchy--architecture)
-- [Transistor Sizing & Technology Specifications](#transistor-sizing--technology-specifications)
-- [Circuit Schematics & Physical Layouts](#circuit-schematics--physical-layouts)
+- [Key Specifications](#key-specifications)
+- [Design Hierarchy and Architecture](#design-hierarchy-and-architecture)
+- [Transistor Sizing and Technology Specifications](#transistor-sizing-and-technology-specifications)
+- [Circuit Schematics and Physical Layouts](#circuit-schematics-and-physical-layouts)
   - [1. 2-Input CMOS NAND Gate](#1-2-input-cmos-nand-gate)
   - [2. 3-Input CMOS NAND Gate](#2-3-input-cmos-nand-gate)
   - [3. Master-Slave JK Flip-Flop](#3-master-slave-jk-flip-flop)
-  - [4. Top-Level 8-Bit Asynchronous Up Counter](#4-top-level-8-bit-asynchronous-up-counter)
+  - [4. 8-Bit Asynchronous Up Counter](#4-8-bit-asynchronous-up-counter)
 - [Transient Simulation Results](#transient-simulation-results)
+- [Timing Performance Analysis](#timing-performance-analysis)
 - [Repository Structure](#repository-structure)
 - [How to Reproduce](#how-to-reproduce)
+- [Conclusion](#conclusion)
+- [Author](#author)
 
 ---
 
 ## Overview
 
-An **8-bit asynchronous up counter** counts binary states from `00000000` ($0_{10}$) to `11111111` ($255_{10}$), representing a **MOD-256** counter.
+An **8-bit asynchronous up counter** counts binary states from `00000000` (0 in decimal) to `11111111` (255 in decimal), providing a total of 256 states. Therefore, it operates as a **MOD-256 counter**.
 
-To eliminate the **race-around condition** associated with level-triggered JK flip-flops when $J = K = 1$, this design employs a Master-Slave JK Flip-Flop architecture built entirely from static CMOS NAND gates.
+The design uses Master-Slave JK flip-flops to avoid the race-around condition associated with level-triggered JK flip-flops when both J and K inputs are HIGH.
 
-Each flip-flop is configured in toggle mode ($J = K = V_{DD}$). The output transition of each stage drives the clock input of the subsequent stage, enabling asynchronous binary up-counting.
+Each flip-flop is configured in toggle mode by connecting:
 
----
-# Performance Analysis and Calculations
+\[
+J=K=V_{DD}
+\]
 
-## 8-Bit Asynchronous Up Counter Using Master-Slave JK Flip-Flops
+When triggered, the flip-flop changes its output state. The output transition of one stage drives the clock input of the next stage, producing asynchronous ripple counting.
 
-### 📊 Key Specifications
-
-| Parameter | Value / Characteristic | Notes |
-|:---|:---|:---|
-| Technology Node | 90 nm CMOS (GPDK90) | Cadence technology |
-| Supply Voltage ($V_{DD}$) | 1.0 V | Based on schematic |
-| Counter Architecture | 8-bit Asynchronous | Ripple counter |
-| Flip-Flop Type | Master-Slave JK | NAND-based implementation |
-| Number of Flip-Flops | 8 | One per counter bit |
-| Counting Sequence | 00000000 to 11111111 | Modulo-256 counting |
-| Clock Frequency ($f$) | 50 MHz (Assumed) | 20 ns clock period |
-| Average Stage Delay ($t_p$) | 0.20 ns  | Mean of rise and fall delays |
-| Critical Ripple Delay | 1.60 ns  | Approximate eight-stage delay |
-| High-to-Low Delay ($t_{PHL}$) | 0.18 ns  | Output falling transition |
-| Low-to-High Delay ($t_{PLH}$) | 0.22 ns  | Output rising transition |
-| Dynamic Power ($P_{dynamic}$) | 1.00 µW  | Switching power |
-| Static Power ($P_{static}$) | 0.01 µW  | Leakage power |
-| Total Average Power ($P_{avg}$) | 1.01 µW  | Dynamic + static power |
-| Power-Delay Product (PDP) | 1.616 fJ  | Average power × ripple delay |
-| Energy-Delay Product (EDP) | 2.586 × 10⁻²⁴ J·s  | Power × delay squared |
-
----
-## Design Hierarchy & Architecture
-
-The design follows a bottom-up full-custom VLSI methodology:
-
-1. **Standard Cell Primitives:**
-   - **2-Input CMOS NAND Gate** (`pmos1v`, `nmos1v`)
-   - **3-Input CMOS NAND Gate** (`pmos1v`, `nmos1v`)
-
-2. **Sequential Building Block:**
-   - **Master-Slave JK Flip-Flop:** Constructed using two 3-input NAND gates (input steering), six 2-input NAND gates (Master SR latch, Slave SR latch, and feedback steering), and one 2-input NAND gate wired as an inverter for the complementary slave clock.
-
-3. **Top-Level System:**
-   - **8-Bit Ripple Counter:** Eight cascaded Master-Slave JK Flip-Flop instances (`FF0` through `FF7`), producing outputs `Q0` (LSB) through `Q7` (MSB).
+The counter consists of eight cascaded flip-flops, with `Q0` representing the least significant bit (LSB) and `Q7` representing the most significant bit (MSB).
 
 ---
 
-## Transistor Sizing & Technology Specifications
+## Key Specifications
 
 | Parameter | Specification |
 |:---|:---|
-| **EDA Suite** | Cadence Virtuoso (Schematic Editor, ADE L / Spectre, Layout Suite XL) |
-| **Process Design Kit** | `gpdk090` (90nm Generic PDK) |
-| **Device Models** | `gpdk090_pmos1v` / `gpdk090_nmos1v` |
-| **Channel Length ($L$)** | $100\text{ nm}$ |
-| **Channel Width ($W$)** | $120\text{ nm}$ (Multiplier $m = 1$) |
-| **Supply Voltage ($V_{DD}$)** | $1.1\text{ V}$ |
-| **Counting Range** | $0$ to $255$ (`0x00` to `0xFF`, 256 states) |
+| Technology Node | 90 nm CMOS (GPDK90) |
+| Supply Voltage (\(V_{DD}\)) | 1.1 V |
+| Counter Architecture | 8-bit Asynchronous Up Counter |
+| Flip-Flop Type | Master-Slave JK |
+| Logic Implementation | Static CMOS NAND Gates |
+| Number of Flip-Flops | 8 |
+| Counting Sequence | 00000000 to 11111111 |
+| Counting Modulus | MOD-256 |
+| Clock Frequency | 50 MHz (assumed) |
+| Clock Period | 20 ns |
 
 ---
 
-## Circuit Schematics & Physical Layouts
+## Design Hierarchy and Architecture
+
+The design follows a bottom-up full-custom VLSI design approach.
+
+### 1. Basic Logic Gates
+
+- **2-Input CMOS NAND Gate:** Implemented using two PMOS and two NMOS transistors.
+- **3-Input CMOS NAND Gate:** Implemented using three PMOS and three NMOS transistors.
+
+### 2. Sequential Building Block
+
+**Master-Slave JK Flip-Flop:**
+
+The flip-flop is constructed using NAND gates arranged into master and slave latch sections with input steering and feedback connections.
+
+The implementation consists of:
+
+- Two 3-input NAND gates for input steering.
+- Six 2-input NAND gates for the master and slave latch and feedback logic.
+- One additional 2-input NAND gate configured as an inverter for the complementary clock signal.
+
+### 3. Top-Level Counter
+
+**8-Bit Asynchronous Up Counter:**
+
+Eight Master-Slave JK flip-flop instances (`FF0` through `FF7`) are connected in cascade.
+
+All flip-flops operate in toggle mode with J and K connected HIGH. The clock connection between successive stages enables ripple-based binary counting.
+
+The outputs are:
+
+- `Q0` – Least Significant Bit (LSB)
+- `Q1` to `Q6` – Intermediate bits
+- `Q7` – Most Significant Bit (MSB)
+
+---
+
+## Transistor Sizing and Technology Specifications
+
+| Parameter | Specification |
+|:---|:---|
+| EDA Suite | Cadence Virtuoso |
+| Schematic Editor | Virtuoso Schematic Editor |
+| Simulation Environment | ADE L / Spectre |
+| Layout Environment | Virtuoso Layout Suite XL |
+| Process Design Kit | `gpdk090` |
+| Technology | 90 nm CMOS |
+| NMOS Model | `gpdk090_nmos1v` |
+| PMOS Model | `gpdk090_pmos1v` |
+| Channel Length (\(L\)) | 100 nm |
+| Channel Width (\(W\)) | 120 nm |
+| Multiplier (\(m\)) | 1 |
+| Supply Voltage (\(V_{DD}\)) | 1.1 V |
+
+The transistor dimensions are selected for the CMOS NAND gate implementation and used throughout the design as specified in the respective transistor instances.
+
+---
+
+## Circuit Schematics and Physical Layouts
 
 ### 1. 2-Input CMOS NAND Gate
 
-Static CMOS implementation using parallel PMOS pull-up transistors (`PM0`, `PM1`) and series NMOS pull-down transistors (`NM0`, `NM1`).
+The 2-input NAND gate is implemented using static CMOS logic.
+
+It consists of two PMOS transistors connected in parallel to form the pull-up network and two NMOS transistors connected in series to form the pull-down network.
+
+**Schematic and Physical Layout**
 
 | Schematic View | Physical Layout View |
 |:---:|:---:|
@@ -108,7 +145,11 @@ Static CMOS implementation using parallel PMOS pull-up transistors (`PM0`, `PM1`
 
 ### 2. 3-Input CMOS NAND Gate
 
-Static CMOS implementation using three parallel PMOS pull-up transistors (`PM0`–`PM2`) and three series NMOS pull-down transistors (`NM0`–`NM2`).
+The 3-input NAND gate is implemented using three parallel PMOS transistors and three series NMOS transistors.
+
+The output becomes LOW only when all three inputs are HIGH.
+
+**Schematic and Physical Layout**
 
 | Schematic View | Physical Layout View |
 |:---:|:---:|
@@ -118,7 +159,11 @@ Static CMOS implementation using three parallel PMOS pull-up transistors (`PM0`�
 
 ### 3. Master-Slave JK Flip-Flop
 
-Gate-level schematic and full-custom physical layout integrating the Master and Slave stages with feedback paths (`Q` and `Qbar`) to achieve edge-triggered toggling without race-around instability.
+The Master-Slave JK flip-flop is constructed using NAND gates with master and slave latch sections.
+
+The feedback connections provide the required JK operation, while the complementary clock signal controls the transfer of data between the two stages.
+
+When both J and K inputs are HIGH, the output toggles at each active triggering edge.
 
 **Gate-Level Schematic**
 
@@ -132,9 +177,13 @@ Gate-level schematic and full-custom physical layout integrating the Master and 
 
 ### 4. 8-Bit Asynchronous Up Counter
 
-Full-chip implementation of the 8-bit asynchronous up counter, consisting of eight cascaded Master-Slave JK Flip-Flop blocks arranged in a compact $2 \times 4$ array with inter-stage ripple clock routing.
+The complete counter is constructed by cascading eight Master-Slave JK flip-flops.
 
-**Schematic**
+Each stage operates in toggle mode, and the output of one stage provides the clock signal for the following stage. This produces the binary counting sequence.
+
+The eight flip-flop blocks are arranged in a 2 × 4 configuration.
+
+**Top-Level Schematic**
 
 ![8-Bit Asynchronous Counter Schematic](Images/01_8_bit_counter_schematic%20(1).jpg)
 
@@ -146,126 +195,156 @@ Full-chip implementation of the 8-bit asynchronous up counter, consisting of eig
 
 ## Transient Simulation Results
 
-Transient simulations were performed in **Cadence Spectre** with a $1.1\text{ V}$ square-wave input clock (`/clk`).
+Transient simulation was performed using **Cadence Spectre** to verify the operation of the 8-bit asynchronous up counter.
 
-The waveforms demonstrate frequency division by $2^n$ at each successive output stage (`/Q0` through `/Q7`), verifying the 8-bit binary counting operation from `00000000` to `11111111`.
+A 1.1 V square-wave clock signal (`/clk`) was applied to the first flip-flop. The output waveforms of the successive stages were observed to verify the counting operation.
 
-- **`/Q0` (LSB):** $f_{clk}/2$
-- **`/Q1`:** $f_{clk}/4$
-- **`/Q2`:** $f_{clk}/8$
-- **`/Q3`:** $f_{clk}/16$
-- **`/Q4`:** $f_{clk}/32$
-- **`/Q5`:** $f_{clk}/64$
-- **`/Q6`:** $f_{clk}/128$
-- **`/Q7` (MSB):** $f_{clk}/256$
+Each successive output divides the frequency of the preceding stage by two.
 
-### Window 1 ($1.0\text{ }\mu s - 2.05\text{ }\mu s$): Lower-to-Mid Bit Transitions
+| Output | Frequency Relationship |
+|:---|:---|
+| `/Q0` (LSB) | \(f_{clk}/2\) |
+| `/Q1` | \(f_{clk}/4\) |
+| `/Q2` | \(f_{clk}/8\) |
+| `/Q3` | \(f_{clk}/16\) |
+| `/Q4` | \(f_{clk}/32\) |
+| `/Q5` | \(f_{clk}/64\) |
+| `/Q6` | \(f_{clk}/128\) |
+| `/Q7` (MSB) | \(f_{clk}/256\) |
+
+For an assumed clock frequency of 50 MHz, the corresponding output frequencies are:
+
+| Output | Frequency |
+|:---|---:|
+| Q0 | 25 MHz |
+| Q1 | 12.5 MHz |
+| Q2 | 6.25 MHz |
+| Q3 | 3.125 MHz |
+| Q4 | 1.5625 MHz |
+| Q5 | 781.25 kHz |
+| Q6 | 390.625 kHz |
+| Q7 | 195.3125 kHz |
+
+### Simulation Waveform 1 – Lower and Intermediate Bit Transitions
+
+This waveform shows the switching activity of the counter outputs and the frequency division across the lower and intermediate stages.
 
 ![Transient Simulation Output 1](Images/08_simulation_waveform_1.jpg)
 
-### Window 2 ($2.1\text{ }\mu s - 3.15\text{ }\mu s$): MSB (`/Q7`) Low-to-High Transition
+### Simulation Waveform 2 – MSB Transition
+
+This waveform shows the transition of the higher-order counter outputs, including the MSB (`/Q7`).
 
 ![Transient Simulation Output 2](Images/09_simulation_waveform_2.jpg)
 
-### Window 3 ($3.1\text{ }\mu s - 4.15\text{ }\mu s$): Full Rollover (`11111111` → `00000000`)
+### Simulation Waveform 3 – Higher-Order Output Transitions
+
+This waveform provides another view of the output transitions during the counting operation.
 
 ![Transient Simulation Output 3](Images/10_simulation_waveform_3.jpg)
 
-Timing Performance Breakdown (`tPLH`, `tPHL`, `tpd`, `tcd`) & RC Parameters
+**Expected Counter Operation**
 
-All timing parameters are referenced to the 50% supply threshold (`Vmid = 0.5 V` at `VDD = 1.0 V`). The following values are illustrative theoretical estimates, not extracted Cadence measurements.
+The counter follows the binary sequence:
 
-| **Hierarchy Block** | **`tPLH`** | **`tPHL`** | **`tpd` (Average Delay)** | **`tcd` (Contamination Delay)** | **Effective Resistance (`Reff`)** | **Effective Capacitance (`Cload`)** | **Elmore Time Constant (`τ = RC`)** | **Critical Path Description** |
-| ------------------- | ---------- | ---------- | ------------------------- | ------------------------------- | --------------------------------- | ----------------------------------- | --------------------------------- | ------------------------------ |
-| **2-Input NAND Gate** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | NAND pull-up / pull-down transition |
-| **3-Input NAND Gate** | 0.24 ns | 0.20 ns | 0.22 ns | 0.20 ns | 22 kΩ | 10 fF | 0.22 ns | Three-transistor series pull-down path |
-| **Master-Slave JK Flip-Flop** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | Master-to-slave data transfer |
-| **JK Flip Flop Counter Stage** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | Clock-to-output transition |
-| **8-Bit Asynchronous Counter** | 1.76 ns | 1.44 ns | 1.60 ns | 0.18 ns* | — | — | — | Eight-stage ripple propagation during counter rollover |
----
-### 7.3 Power Dissipation, PDP and EDP
+```text
+00000000
+00000001
+00000010
+00000011
+00000100
+    .
+    .
+    .
+11111110
+11111111
+00000000
+```
 
-- **Total Average Power Dissipation (Pavg):** **1.01 µW** (1.01 × 10⁻⁶ W)
+For a 50 MHz clock, the time required for 256 clock cycles is:
 
-- **Dynamic Power Dissipation (Pdynamic):** **1.00 µW** (approximately 99.0% of total power)
+\[
+T_{rollover}=256\times20ns
+\]
 
-  Dynamic power is calculated as:
+\[
+\boxed{T_{rollover}=5.12\ \mu s}
+\]
 
-  $$P_{dynamic} = \alpha \times C_{eff} \times V_{DD}^{2} \times f$$
-
-  $$= 2 \times (10 \times 10^{-15}) \times (1)^2 \times (50 \times 10^6)$$
-
-  $$= 1.00\ \mu W$$
-
-- **Static Leakage Power (Pstatic):** **0.01 µW** (approximately 1.0% of total power)
-
-  Static power is calculated as:
-
-  $$P_{static} = I_{leakage} \times V_{DD}$$
-
-  $$= 10\ nA \times 1\ V$$
-
-  $$= 0.01\ \mu W$$
-
-- **Average Propagation Delay (tpd):** **0.20 ns**
-
-- **Critical Ripple Delay:** **1.60 ns** (eight cascaded stages)
-
-
-#### 1. Power-Delay Product (PDP)
-
-PDP represents the energy consumed during the estimated critical-path propagation interval.
-
-$$
-PDP=P_{avg}\times t_{ripple}
-$$
-
-$$
-=(1.01\times10^{-6})(1.60\times10^{-9})
-$$
-
-$$
-\boxed{PDP=1.616\times10^{-15}\ J=1.616\ fJ}
-$$
-
-#### 2. Energy-Delay Product (EDP)
-
-EDP represents the combined energy and delay performance.
-
-$$
-EDP=PDP\times t_{ripple}
-$$
-
-$$
-=(1.616\times10^{-15})(1.60\times10^{-9})
-$$
-
-$$
-\boxed{EDP=2.586\times10^{-24}\ J\cdot s}
-$$
-
-Equivalent:
-
-`EDP = 2.586 fJ·ns`
+Therefore, a transient simulation starting from zero must extend beyond 5.12 µs to capture the complete MOD-256 rollover.
 
 ---
 
-### 7.4 Flip-Flop Timing Characteristics and Clock Parameters
+## Timing Performance Analysis
 
-The timing characteristics of the Master-Slave JK Flip-Flops determine the operating speed and timing performance of the asynchronous counter. Each flip-flop stage is triggered by the output transition of the preceding stage, resulting in a cumulative ripple propagation delay across the eight stages.
+The propagation delay of each stage contributes to the overall ripple delay of the asynchronous counter.
 
-| **Timing Parameter** | **Symbol** | **Value / Status** | **Specification & Description** |
-|---|---|---:|---|
-| High-to-Low Propagation Delay | `tPHL` | 0.18 ns | Output transition from HIGH to LOW |
-| Low-to-High Propagation Delay | `tPLH` | 0.22 ns | Output transition from LOW to HIGH |
-| Average Propagation Delay | `tpd` | 0.20 ns | Average of rising and falling propagation delays |
-| Contamination Delay | `tcd` | 0.18 ns | Minimum propagation delay |
-| Setup Time | `tsetup` | Not characterized | Required J/K input stability before the active clock edge |
-| Hold Time | `thold` | Not characterized | Required J/K input stability after the active clock edge |
-| Clock Rise Time | `tr` | 5 ps | Clock source rise-time setting |
-| Clock Fall Time | `tf` | Not verified | Clock source fall-time setting |
-| Clock Skew | `tskew` | Not characterized | Not applicable as a conventional synchronous clock parameter in the ripple chain |
-| Ripple Propagation Delay | `tripple` | 1.60 ns | Cumulative propagation delay across eight stages |
+The following values are illustrative theoretical estimates and are not extracted Cadence measurements.
+
+### 1. Estimated Propagation Delay
+
+| Parameter | Symbol | Estimated Value |
+|:---|:---|---:|
+| High-to-Low Delay | \(t_{PHL}\) | 0.18 ns |
+| Low-to-High Delay | \(t_{PLH}\) | 0.22 ns |
+| Average Propagation Delay | \(t_{pd}\) | 0.20 ns |
+
+The average propagation delay is calculated as:
+
+\[
+t_{pd}=\frac{t_{PLH}+t_{PHL}}{2}
+\]
+
+\[
+t_{pd}=\frac{0.22+0.18}{2}
+\]
+
+\[
+\boxed{t_{pd}=0.20\ ns}
+\]
+
+### 2. Estimated Ripple Propagation Delay
+
+For an approximate eight-stage ripple propagation path:
+
+\[
+t_{ripple}=N\times t_{pd}
+\]
+
+Where:
+
+- \(N=8\) is the number of flip-flop stages.
+- \(t_{pd}=0.20\ ns\) is the assumed average stage delay.
+
+\[
+t_{ripple}=8\times0.20
+\]
+
+\[
+\boxed{t_{ripple}=1.60\ ns}
+\]
+
+This is a first-order estimate. The actual ripple delay depends on the clock-to-output delay of each flip-flop, loading, and interconnect parasitics.
+
+### 3. Timing Reference
+
+The timing measurements, if extracted from simulation, should use the 50% supply-voltage threshold.
+
+For the specified 1.1 V supply:
+
+\[
+V_{mid}=0.5\times1.1
+\]
+
+\[
+\boxed{V_{mid}=0.55\ V}
+\]
+
+The estimated delay values above should not be interpreted as measured timing results.
+
+**Note:** Actual propagation delay, contamination delay, setup time, hold time, and power dissipation require separate characterization using the appropriate Cadence simulation analyses.
+
+---
 
 ## Repository Structure
 
@@ -294,18 +373,31 @@ The timing characteristics of the Master-Slave JK Flip-Flops determine the opera
 
 ## How to Reproduce
 
-1. Launch **Cadence Virtuoso** in a working directory configured with the `gpdk090` library.
-2. Create a new library and build the leaf cells (`NAND2` and `NAND3`) using `pmos1v` and `nmos1v` ($W = 120\text{ nm}$, $L = 100\text{ nm}$), then generate their corresponding symbols and DRC/LVS-clean layouts.
-3. Instantiate the NAND gates to construct the **Master-Slave JK Flip-Flop** schematic and layout, verifying functionality with $J = K = 1.1\text{ V}$.
-4. Cascade eight instances of the Master-Slave JK Flip-Flop symbol to form the **8-Bit Asynchronous Up Counter**.
-5. Open **ADE L**, select the **Spectre** simulator, set the transient stop time to $4.2\text{ }\mu s$, and plot `/clk` along with `/Q0`–`/Q7`.
+1. Launch **Cadence Virtuoso** in a working directory configured with the `gpdk090` technology library.
 
+2. Create a new design library and develop the basic CMOS NAND gates (`NAND2` and `NAND3`) using the `pmos1v` and `nmos1v` devices.
+
+3. Use the specified transistor dimensions (\(W=120\ nm\), \(L=100\ nm\)) and create the corresponding schematic symbols and physical layouts.
+
+4. Construct the Master-Slave JK flip-flop using the NAND gate building blocks. Configure the J and K inputs in toggle mode by connecting them to the supply voltage.
+
+5. Verify the JK flip-flop operation through transient simulation.
+
+6. Instantiate eight JK flip-flops and connect them in cascade to construct the 8-bit asynchronous up counter. Ensure that the inter-stage clock connections match the triggering polarity required for up-counting.
+
+7. Open **ADE L**, select the **Spectre** simulator, configure the transient analysis, and apply the clock input.
+
+8. Set the transient stop time to approximately 5.5–6 µs for a 50 MHz clock to observe the complete MOD-256 counting sequence, including rollover.
+
+9. Plot the input clock (`/clk`) and output signals (`/Q0` to `/Q7`) to verify the counter operation.
+
+---
 
 ## Conclusion
 
-This project demonstrates the complete design and implementation of an **8-bit asynchronous up counter** using NAND-based Master-Slave JK Flip-Flops in Cadence Virtuoso. The design covers transistor-level schematic development, CMOS physical layout implementation, and transient simulation using the GPDK 90nm technology. The simulation results verify the expected MOD-256 counting sequence and frequency division across all eight stages.
+This project demonstrates the design and implementation of an 8-bit asynchronous up counter using NAND-based Master-Slave JK flip-flops in Cadence Virtuoso. The design includes CMOS NAND gate development, flip-flop construction, transistor-level schematic implementation, and physical layout design using the GPDK 90nm technology.
 
-The project provided practical experience in **CMOS circuit design, sequential logic, full-custom VLSI design, and circuit simulation**, strengthening the understanding of digital IC design concepts and their implementation.
+Transient simulation is used to verify the binary counting operation and frequency division across successive output stages. Through this project, practical experience was gained in CMOS circuit design, sequential logic, physical layout implementation, and circuit-level simulation.
 
 ---
 
