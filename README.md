@@ -38,7 +38,32 @@ To eliminate the **race-around condition** associated with level-triggered JK fl
 Each flip-flop is configured in toggle mode ($J = K = V_{DD}$). The output transition of each stage drives the clock input of the subsequent stage, enabling asynchronous binary up-counting.
 
 ---
+# Performance Analysis and Calculations
 
+## 8-Bit Asynchronous Up Counter Using Master-Slave JK Flip-Flops
+
+### 📊 Key Specifications
+
+| Parameter | Value / Characteristic | Notes |
+|:---|:---|:---|
+| Technology Node | 90 nm CMOS (GPDK90) | Cadence technology |
+| Supply Voltage ($V_{DD}$) | 1.0 V | Based on schematic |
+| Counter Architecture | 8-bit Asynchronous | Ripple counter |
+| Flip-Flop Type | Master-Slave JK | NAND-based implementation |
+| Number of Flip-Flops | 8 | One per counter bit |
+| Counting Sequence | 00000000 to 11111111 | Modulo-256 counting |
+| Clock Frequency ($f$) | 50 MHz (Assumed) | 20 ns clock period |
+| Average Stage Delay ($t_p$) | 0.20 ns (Estimated) | Mean of rise and fall delays |
+| Critical Ripple Delay | 1.60 ns (Estimated) | Approximate eight-stage delay |
+| High-to-Low Delay ($t_{PHL}$) | 0.18 ns (Estimated) | Output falling transition |
+| Low-to-High Delay ($t_{PLH}$) | 0.22 ns (Estimated) | Output rising transition |
+| Dynamic Power ($P_{dynamic}$) | 1.00 µW (Estimated) | Switching power |
+| Static Power ($P_{static}$) | 0.01 µW (Estimated) | Leakage power |
+| Total Average Power ($P_{avg}$) | 1.01 µW (Estimated) | Dynamic + static power |
+| Power-Delay Product (PDP) | 1.616 fJ (Estimated) | Average power × ripple delay |
+| Energy-Delay Product (EDP) | 2.586 × 10⁻²⁴ J·s (Estimated) | Power × delay squared |
+
+---
 ## Design Hierarchy & Architecture
 
 The design follows a bottom-up full-custom VLSI methodology:
