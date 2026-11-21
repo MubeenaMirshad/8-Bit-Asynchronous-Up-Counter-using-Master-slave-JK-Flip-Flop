@@ -2,18 +2,22 @@
 
 Technology: GPDK 90 nm, supply voltage 1 V, clock frequency 100 MHz.
 
-These are hand calculations from the assumed values below. They were not extracted from the Spectre results.
+The values in this section are analytical estimates. The supply voltage, clock frequency, device sizes and circuit structure come from the Cadence design. The resistance, capacitance and leakage values are estimated and were not extracted from Cadence, so the results below are not Spectre-measured values.
 
-### Assumptions
+### Calculation Inputs
 
-| Quantity | Value |
-|:---|:---|
-| NMOS on-resistance, R<sub>n</sub> (W = 120 nm) | 10 kΩ |
-| PMOS on-resistance, R<sub>p</sub> (W = 120 nm) | 25 kΩ |
-| Load capacitance at each gate output, C<sub>L</sub> | 10 fF |
-| Internal node capacitance between series NMOS, C<sub>x</sub> | 2 fF |
-| Leakage current of the whole counter | 10 nA |
-| Delay is measured at | 50% of V<sub>DD</sub> (0.5 V) |
+| Quantity | Value | Source |
+|:---|:---:|:---|
+| Supply voltage, V<sub>DD</sub> | 1 V | Cadence schematic |
+| Clock frequency | 100 MHz (10 ns period) | Cadence testbench |
+| Device size | W = 120 nm, L = 100 nm | Cadence schematic |
+| Number of stages | 8 | Cadence schematic |
+| NMOS on-resistance, R<sub>n</sub> | 10 kΩ | Estimated |
+| PMOS on-resistance, R<sub>p</sub> | 25 kΩ | Estimated |
+| Load capacitance at each gate output, C<sub>L</sub> | 10 fF | Estimated |
+| Internal node capacitance between series NMOS, C<sub>x</sub> | 2 fF | Estimated |
+| Leakage current of the whole counter | 10 nA | Estimated |
+| Delay reference level | 50% of V<sub>DD</sub> (0.5 V) | Convention |
 
 ### 1. Propagation Delay
 
@@ -79,7 +83,7 @@ t<sub>ripple</sub> = 0.69 × 5.64 ns ≈ 3.89 ns
 
 ### 3. Ripple Delay
 
-Approximate eight-stage ripple delay from the propagation delay:
+The ripple delay is estimated analytically from the NAND gate delays above. It is not measured in Spectre. The approximate eight-stage ripple delay is:
 
 t<sub>ripple</sub> = 8 × t<sub>p(FF)</sub> = 8 × 0.48 ns = **3.84 ns**
 
@@ -95,7 +99,7 @@ Dynamic power is the power used while the outputs switch:
 
 P<sub>dynamic</sub> = C · V<sub>DD</sub>² · f
 
-Output Q(n) switches at f / 2<sup>n+1</sup>, so the activity halves at every stage. Taking C = 10 fF for each of the eight Q outputs:
+This estimate includes only the eight Q output nodes. Output Q(n) switches at $f/2^{(n+1)}$, so the activity halves at every stage. Taking C = 10 fF for each of the eight Q outputs:
 
 P<sub>dynamic</sub> = C · V<sub>DD</sub>² · f · (1/2 + 1/4 + ... + 1/256)
 
@@ -103,7 +107,7 @@ P<sub>dynamic</sub> = C · V<sub>DD</sub>² · f · (1/2 + 1/4 + ... + 1/256)
 
 = 1.00 µW (0.996 µW before rounding)
 
-Internal nodes of the flip-flops also switch, so this counts only the output nodes.
+Switching of the internal flip-flop nodes is not included, so the power simulated in Spectre will be higher.
 
 ### 5. Static Power
 
@@ -141,3 +145,5 @@ EDP = PDP × t<sub>ripple</sub> = (3.88 × 10⁻¹⁵ J)(3.84 × 10⁻⁹ s) = 1
 | Average power | 1.01 µW |
 | PDP | 3.88 fJ |
 | EDP | 1.49 × 10⁻²³ J·s |
+
+All values in this table are analytical estimates. The transient waveforms above are the simulation results.
