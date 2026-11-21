@@ -1,141 +1,143 @@
+## Performance Calculations
 
-# Performance Calculations
+Technology: GPDK 90 nm, supply voltage 1 V, clock frequency 100 MHz.
 
-## 8-Bit Asynchronous Up Counter Using Master-Slave JK Flip-Flops
+These are hand calculations from the assumed values below. They were not extracted from the Spectre results.
 
-**Technology:** GPDK 90nm  
-**Supply Voltage:** 1 V  
-**EDA Tool:** Cadence Virtuoso
+### Assumptions
 
----
+| Quantity | Value |
+|:---|:---|
+| NMOS on-resistance, R<sub>n</sub> (W = 120 nm) | 10 kΩ |
+| PMOS on-resistance, R<sub>p</sub> (W = 120 nm) | 25 kΩ |
+| Load capacitance at each gate output, C<sub>L</sub> | 10 fF |
+| Internal node capacitance between series NMOS, C<sub>x</sub> | 2 fF |
+| Leakage current of the whole counter | 10 nA |
+| Delay is measured at | 50% of V<sub>DD</sub> (0.5 V) |
 
-## 1. Propagation Delay
+### 1. Propagation Delay
 
-The propagation delay is the time taken by the output to respond to a change in the input.
+The propagation delay is the time the output takes to respond after the input changes. For an RC node the 50% delay is t = 0.69 · τ, where τ is the Elmore time constant (see section 2).
 
-### High-to-Low Propagation Delay
+**2-input NAND**
 
-$$
-t_{PHL}=0.18\ ns
-$$
+High-to-low (series NMOS pull-down):
 
-### Low-to-High Propagation Delay
+τ<sub>f</sub> = R<sub>n</sub>·C<sub>x</sub> + 2R<sub>n</sub>·C<sub>L</sub> = (10 kΩ)(2 fF) + (20 kΩ)(10 fF) = 0.22 ns
 
-$$
-t_{PLH}=0.22\ ns
-$$
+t<sub>PHL</sub> = 0.69 × 0.22 ns ≈ 0.15 ns
 
-### Average Propagation Delay
+Low-to-high (worst case, only one PMOS conducting):
 
-$$
-t_p=\frac{t_{PHL}+t_{PLH}}{2}
-$$
+τ<sub>r</sub> = R<sub>p</sub>·C<sub>L</sub> = (25 kΩ)(10 fF) = 0.25 ns
 
-$$
-t_p=\frac{0.18+0.22}{2}
-$$
+t<sub>PLH</sub> = 0.69 × 0.25 ns ≈ 0.17 ns
 
-$$
-\boxed{t_p=0.20\ ns}
-$$
+Average propagation delay:
 
-### Approximate Eight-Stage Ripple Delay
+t<sub>p</sub> = (t<sub>PHL</sub> + t<sub>PLH</sub>) / 2 = (0.15 + 0.17) / 2 = 0.16 ns
 
-$$
-t_{ripple}=8\times t_p
-$$
+**3-input NAND**
 
-$$
-t_{ripple}=8\times0.20
-$$
+τ<sub>f</sub> = R<sub>n</sub>·C<sub>x</sub> + 2R<sub>n</sub>·C<sub>x</sub> + 3R<sub>n</sub>·C<sub>L</sub> = 0.02 + 0.04 + 0.30 = 0.36 ns, so t<sub>PHL</sub> ≈ 0.25 ns
 
-$$
-\boxed{t_{ripple}=1.60\ ns}
-$$
+τ<sub>r</sub> = 0.25 ns, so t<sub>PLH</sub> ≈ 0.17 ns
 
----
+t<sub>p</sub> = (0.25 + 0.17) / 2 = 0.21 ns
 
-## 2. Dynamic Power
+**Master-slave JK flip-flop (clock to Q)**
 
-Dynamic power is the power consumed during switching operations.
+The path from the clock to Q goes through three NAND2 stages. A rising output passes through two rising gate transitions and one falling, and a falling output through one rising and two falling:
 
-$$
-P_{dynamic}=\alpha C_{eff}V_{DD}^{2}f
-$$
+t<sub>PLH(FF)</sub> = 2 × 0.17 + 0.15 = 0.49 ns
 
-Assuming:
+t<sub>PHL(FF)</sub> = 0.17 + 2 × 0.15 = 0.47 ns
 
-- Switching coefficient = 2
-- Effective capacitance = 10 fF
-- Supply voltage = 1 V
-- Clock frequency = 50 MHz
+t<sub>p(FF)</sub> = (0.49 + 0.47) / 2 = 0.48 ns
 
-Substituting:
+### 2. Elmore Delay
 
-$$
-P_{dynamic}=2\times10\times10^{-15}
-\times1^2\times50\times10^6
-$$
+For a node driven through resistors in series, the Elmore delay is the sum of each node capacitance multiplied by the resistance it shares with the output path:
 
-$$
-\boxed{P_{dynamic}=1.00\ \mu W}
-$$
+τ = Σ C<sub>i</sub> · R<sub>i,shared</sub>
 
----
+The values for one NAND2 gate are:
 
-## 3. Static Power
+| Transition | Calculation | τ |
+|:---|:---|:---:|
+| Pull-down (series NMOS) | 10 kΩ × 2 fF + 20 kΩ × 10 fF | 0.22 ns |
+| Pull-up (single PMOS) | 25 kΩ × 10 fF | 0.25 ns |
+| Average | (0.22 + 0.25) / 2 | 0.235 ns |
 
-Static power is the power consumed when the circuit is not switching.
+Each flip-flop output is driven by a gate, so the stages are isolated from one another and their time constants simply add along the ripple path:
 
-$$
-P_{static}=V_{DD}\times I_{leakage}
-$$
+τ<sub>FF</sub> = 3 × 0.235 ns = 0.705 ns
 
-Assuming leakage current = 10 nA,
+τ<sub>ripple</sub> = 8 × τ<sub>FF</sub> = 8 × 0.705 ns = 5.64 ns
 
-$$
-P_{static}=1\times10\times10^{-9}
-$$
+t<sub>ripple</sub> = 0.69 × 5.64 ns ≈ 3.89 ns
 
-$$
-\boxed{P_{static}=0.01\ \mu W}
-$$
+### 3. Ripple Delay
 
----
+Approximate eight-stage ripple delay from the propagation delay:
 
-## 4. Average Power
+t<sub>ripple</sub> = 8 × t<sub>p(FF)</sub> = 8 × 0.48 ns = **3.84 ns**
 
-Average power is calculated as the sum of dynamic and static power.
+The Elmore result in section 2 (3.89 ns) agrees with this to within about 1.5%.
 
-$$
-P_{avg}=P_{dynamic}+P_{static}
-$$
+The worst case is the rollover `01111111` to `10000000`, where Q0 to Q6 fall one after another and Q7 rises last: 7 × 0.47 + 0.49 = 3.78 ns, which is also close.
 
-$$
-P_{avg}=1.00+0.01
-$$
+The clock period (10 ns) is longer than the ripple delay, so all outputs settle before the next count. The ripple delay limits the clock frequency to roughly 1 / 3.84 ns ≈ 260 MHz, and only if the outputs are decoded. While the ripple travels the outputs briefly show intermediate codes, so anything that decodes the counter output has to allow for this.
 
-$$
-\boxed{P_{avg}=1.01\ \mu W}
-$$
+### 4. Dynamic Power
 
----
+Dynamic power is the power used while the outputs switch:
 
-## 5. Performance Summary
+P<sub>dynamic</sub> = C · V<sub>DD</sub>² · f
+
+Output Q(n) switches at f / 2<sup>n+1</sup>, so the activity halves at every stage. Taking C = 10 fF for each of the eight Q outputs:
+
+P<sub>dynamic</sub> = C · V<sub>DD</sub>² · f · (1/2 + 1/4 + ... + 1/256)
+
+= (10 × 10⁻¹⁵)(1)²(100 × 10⁶)(1 − 2⁻⁸)
+
+= 1.00 µW (0.996 µW before rounding)
+
+Internal nodes of the flip-flops also switch, so this counts only the output nodes.
+
+### 5. Static Power
+
+Static power is the power used when the circuit is not switching:
+
+P<sub>static</sub> = V<sub>DD</sub> × I<sub>leakage</sub> = 1 V × 10 nA = 0.01 µW
+
+### 6. Average Power
+
+P<sub>avg</sub> = P<sub>dynamic</sub> + P<sub>static</sub> = 1.00 + 0.01 = 1.01 µW
+
+Dynamic power is about 99% of the total.
+
+### 7. Power-Delay and Energy-Delay Product
+
+PDP = P<sub>avg</sub> × t<sub>ripple</sub> = (1.01 × 10⁻⁶ W)(3.84 × 10⁻⁹ s) = 3.88 × 10⁻¹⁵ J = 3.88 fJ
+
+EDP = PDP × t<sub>ripple</sub> = (3.88 × 10⁻¹⁵ J)(3.84 × 10⁻⁹ s) = 1.49 × 10⁻²³ J·s (14.9 fJ·ns)
+
+### 8. Performance Summary
 
 | Parameter | Estimated Value |
-|:---|---:|
-| Supply Voltage | 1 V |
-| tPHL | 0.18 ns |
-| tPLH | 0.22 ns |
-| Average Propagation Delay | 0.20 ns |
-| Eight-Stage Ripple Delay | 1.60 ns |
-| Dynamic Power | 1.00 µW |
-| Static Power | 0.01 µW |
-| Average Power | 1.01 µW |
-
----
-
-## Note
-
-The above values are preliminary theoretical estimates based on assumed operating conditions. They are not directly measured Cadence simulation results. Actual performance depends on clock frequency, load capacitance, transistor characteristics, and leakage current.
+|:---|:---:|
+| Supply voltage | 1 V |
+| Clock frequency | 100 MHz |
+| t<sub>PHL</sub> (NAND2) | 0.15 ns |
+| t<sub>PLH</sub> (NAND2) | 0.17 ns |
+| Average propagation delay (NAND2) | 0.16 ns |
+| Flip-flop clock-to-Q delay | 0.48 ns |
+| Elmore time constant, one NAND2 (average) | 0.235 ns |
+| Elmore time constant, eight-stage ripple | 5.64 ns |
+| Eight-stage ripple delay | 3.84 ns |
+| Dynamic power | 1.00 µW |
+| Static power | 0.01 µW |
+| Average power | 1.01 µW |
+| PDP | 3.88 fJ |
+| EDP | 1.49 × 10⁻²³ J·s |
