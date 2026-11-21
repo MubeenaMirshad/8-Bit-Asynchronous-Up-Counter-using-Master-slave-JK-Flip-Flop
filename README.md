@@ -246,20 +246,20 @@ Equivalent:
 
 ### 7.4 Flip-Flop Timing Characteristics and Clock Parameters
 
-The timing characteristics of the Master-Slave JK Flip-Flops determine the correct operation of the asynchronous counter. Since each flip-flop stage is triggered by the output transition of the preceding stage, the overall counting speed is limited by cumulative ripple propagation delay.
+The timing characteristics of the Master-Slave JK Flip-Flops determine the operating speed and timing performance of the asynchronous counter. Each flip-flop stage is triggered by the output transition of the preceding stage, resulting in a cumulative ripple propagation delay across the eight stages.
 
 | **Timing Parameter** | **Symbol** | **Value / Status** | **Specification & Description** |
-|---|---|---|---|
-| High-to-Low Propagation Delay | `tPHL` | 0.18 ns  | Output HIGH-to-LOW transition |
-| Low-to-High Propagation Delay | `tPLH` | 0.22 ns  | Output LOW-to-HIGH transition |
-| Average Propagation Delay | `tpd` | 0.20 ns  | Average of rising and falling delays |
-| Contamination Delay | `tcd` | 0.18 ns ) | Minimum estimated propagation delay |
+|---|---|---:|---|
+| High-to-Low Propagation Delay | `tPHL` | 0.18 ns | Output transition from HIGH to LOW |
+| Low-to-High Propagation Delay | `tPLH` | 0.22 ns | Output transition from LOW to HIGH |
+| Average Propagation Delay | `tpd` | 0.20 ns | Average of rising and falling propagation delays |
+| Contamination Delay | `tcd` | 0.18 ns | Minimum propagation delay |
 | Setup Time | `tsetup` | Not characterized | Required J/K input stability before the active clock edge |
 | Hold Time | `thold` | Not characterized | Required J/K input stability after the active clock edge |
-| Clock Rise Time | `tr` | 5 ps (Source setting) | Clock source rise-time setting visible in schematic |
-| Clock Fall Time | `tf` | Not verified | Requires clock source configuration |
-| Clock Skew | `tskew` | Not characterized | Conventional synchronous clock skew is not applicable to the ripple chain |
-| Ripple Propagation Delay | `tripple` | 1.60 ns (Estimated) | Approximate cumulative delay across eight stages |
+| Clock Rise Time | `tr` | 5 ps | Clock source rise-time setting |
+| Clock Fall Time | `tf` | Not verified | Clock source fall-time setting |
+| Clock Skew | `tskew` | Not characterized | Not applicable as a conventional synchronous clock parameter in the ripple chain |
+| Ripple Propagation Delay | `tripple` | 1.60 ns | Cumulative propagation delay across eight stages |
 
 ## Repository Structure
 
