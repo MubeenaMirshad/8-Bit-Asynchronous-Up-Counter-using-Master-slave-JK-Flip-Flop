@@ -171,6 +171,19 @@ The waveforms demonstrate frequency division by $2^n$ at each successive output 
 
 ![Transient Simulation Output 3](Images/10_simulation_waveform_3.jpg)
 
+Timing Performance Breakdown (`tPLH`, `tPHL`, `tpd`, `tcd`) & RC Parameters
+
+All timing parameters are referenced to the 50% supply threshold (`Vmid = 0.5 V` at `VDD = 1.0 V`). The following values are illustrative theoretical estimates, not extracted Cadence measurements.
+
+| **Hierarchy Block** | **`tPLH`** | **`tPHL`** | **`tpd` (Average Delay)** | **`tcd` (Contamination Delay)** | **Effective Resistance (`Reff`)** | **Effective Capacitance (`Cload`)** | **Elmore Time Constant (`τ = RC`)** | **Critical Path Description** |
+| ------------------- | ---------- | ---------- | ------------------------- | ------------------------------- | --------------------------------- | ----------------------------------- | --------------------------------- | ------------------------------ |
+| **2-Input NAND Gate** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | NAND pull-up / pull-down transition |
+| **3-Input NAND Gate** | 0.24 ns | 0.20 ns | 0.22 ns | 0.20 ns | 22 kΩ | 10 fF | 0.22 ns | Three-transistor series pull-down path |
+| **Master-Slave JK Flip-Flop** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | Master-to-slave data transfer |
+| **Single Counter Stage** | 0.22 ns | 0.18 ns | 0.20 ns | 0.18 ns | 20 kΩ | 10 fF | 0.20 ns | Clock-to-output transition |
+| **8-Bit Asynchronous Counter** | 1.76 ns | 1.44 ns | 1.60 ns | 0.18 ns* | — | — | — | Eight-stage ripple propagation during counter rollover |
+
+
 ---
 
 ## Repository Structure
